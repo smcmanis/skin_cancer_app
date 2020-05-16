@@ -1,0 +1,237 @@
+body {
+    margin: 0px;
+}
+
+/* Base Styles
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+body {
+    font-size: 1.5em;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: Roboto, helvetica, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: rgb(50, 50, 50);
+    /* overflow: hidden; */
+
+}
+
+/* Typography
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: -.1rem
+}
+
+h2 {
+    font-size: 3.6rem;
+    letter-spacing: -.1rem;
+}
+
+h3 {
+    font-size: 3.0rem;
+    letter-spacing: -.1rem;
+}
+
+h4 {
+    font-size: 2.6rem;
+    letter-spacing: -.08rem;
+}
+
+h5 {
+    font-size: 2.2rem;
+    letter-spacing: -.05rem;
+}
+
+h6 {
+    font-size: 2.0rem;
+    letter-spacing: 0;
+}
+
+p {
+    margin-top: 0;
+}
+
+/* Links
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+a {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+
+/* Buttons
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+    display: inline-block;
+    /* height: 38px; */
+    padding: 10px 30px;
+    /* color: #555; */
+    text-align: center;
+    /* font-size: 11px; */
+    font-weight: 600;
+    /* line-height: 38px; */
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.button:hover, button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover, .button:focus, button:focus, input[type="submit"]:focus, input[type="reset"]:focus, input[type="button"]:focus {
+    
+    outline: 0;
+}
+
+.button.button-primary, button.button-primary, input[type="submit"].button-primary, input[type="reset"].button-primary, input[type="button"].button-primary {
+    color: #FFF;
+    background-color: #33C3F0;
+    border-color: #33C3F0;
+}
+
+.button.button-primary:hover, button.button-primary:hover, input[type="submit"].button-primary:hover, input[type="reset"].button-primary:hover, input[type="button"].button-primary:hover, .button.button-primary:focus, button.button-primary:focus, input[type="submit"].button-primary:focus, input[type="reset"].button-primary:focus, input[type="button"].button-primary:focus {
+    color: #FFF;
+    background-color: #1EAEDB;
+    border-color: #1EAEDB;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    /* font-family: Dosis, 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+    font-weight: 400;
+    color: #40546C;
+}
+
+/* * {
+    border: 1px solid black;
+} */
+.page {
+    background-color: #ededed;
+    /* min-height: 100vh; */
+    min-width:100vw;
+    min-height: 100vh;
+    /* display: flex; */
+    /* justify-content: center; */
+}
+
+
+.container  {
+    background:white;
+    min-height: 100vh;
+}
+
+#tabs {
+    display: flex;
+    flex-direction: row;
+}
+#tabs > .tab {
+    padding: 0 !important;
+    max-width: 50vw;
+}
+
+.tab--selected {
+    border-left: 1px;
+    border-right: 1px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.inputs {
+    grid-area: inputs;
+}
+
+.outputs {
+    grid-area: outputs;
+}
+
+/* #upload-btn {
+    
+} */
+#upload-btn:hover {
+    color: #333;
+    border-color: #888;
+}
+.btn {
+    margin: 2em 0;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#img-store > * {
+    display: none;
+}
+
+.display-img {
+    max-height: 500px;
+    max-width: 600px;
+}
+
+#analyzed-img {
+    padding: 10px 0;
+}
+
+#submit-btn {
+    width: 50%;
+    padding: 5px 0;
+    font-size: 1em;
+}
+
+#submit-btn.disabled:hover {
+
+}
+.submit-rdy {
+    border: 1px solid white !important;
+    color: white;
+    background-color: #00d16b;
+}
+
+.submit-rdy:hover {
+    color: white;
+    border: 1px solid #00d16b !important;
+}
+
+#submit-btn.disbaled {
+    
+}
+
+@media (min-width: 601px) {
+    .container {
+      max-width: 800px;
+      margin: auto;
+
+    }
+  }
+@media (max-width: 600px) {
+    .container {
+      min-width: 100%;
+      margin: 0;
+    }
+    #display-img {
+        max-width: 80vw;
+    }
+  }
