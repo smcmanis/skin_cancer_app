@@ -22,21 +22,21 @@
 ## Installation
 ### Prerequisites
 - Python 3.1+ and preferably virtual enviornment software (pipenv, venv, etc)
-- I recommend pipenv because pipenv will automatiaclly update whenever a python
-  file is changed.
 ### Install
 
-Clone the repo:
+Clone the repo and enter the directory:
 ```bash
-$ git clone https://github.com/smcmanis/skin_cancer_app.git
+$ git clone https://github.com/smcmanis/skin_cancer_app.git  
 $ cd skin_cancer_app 
 ```
-To install with pip or pipenv:
+
+To install with pip:  
 ```bash
 $ pip install requirements.txt
+```
 
-OR
-
+To install with pipenv:  
+```bash
 $ pipenv shell
 $ pipenv install
 ```
