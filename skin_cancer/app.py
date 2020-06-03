@@ -1,4 +1,5 @@
 import dash
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
@@ -7,65 +8,52 @@ from dash.exceptions import PreventUpdate
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__,
-                meta_tags=[
-                    {
-                        'charset': 'utf-8',
-                    },
-                    {
-                        'name': 'viewport',
-                        'content': 'width=device-width, initial-scale=1, shrink-to-fit=no'
-                    }
-                ],)
-
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    meta_tags=[
+        {
+            'charset': 'utf-8',
+        },
+        {
+            'name': 'viewport',
+            'content': 'width=device-width, initial-scale=1, shrink-to-fit=no'
+        }
+    ],)
 
 start_tab = html.Div(
     id='start-content',
-    className='content',
-    style={'display':'none'},
+    style={'display':'none', 'min-height': '50vh'},
     children=[
-        dcc.Upload(
-            html.Button('Add Photo', id='upload-btn'), id='upload',
-            accept='image/*', 
-            className='btn',
-            className_active='upload-active',), 
-        html.Div(
-            id='img-row',
-            children=[
-                html.Div([html.Img(id='display-img', className='display-img')], className='img-container')
-            ]
-        ),
-        html.Button('Analyze',id='submit-btn', className='btn disabled')
-    ]
+    dbc.Row(
+        [
+            dbc.Col(
+                dcc.Upload(
+                    dbc.Button("Add Photo", color="primary", id="upload-btn", block=True),
+                    id="upload",
+                    accept='image/*'),
+                width={"size":3})
+        ],
+        justify="center"
+    ),
+    dbc.Row(
+        [
+            dbc.Col(dbc.Row(
+                html.Img(id='display-img', className='display-img'),
+                justify="center"
+            ), width={"size":8} ),
+        ],
+        # justify="center"
+    ),
+    dbc.Row(
+        [
+            dbc.Col(
+                dbc.Button("Analyze", color="success", id="submit-btn", disabled=True, block=True),
+                width={"size":3})
+        ],
+        justify="center"
+    ),
+    dbc.Row([dbc.Col(dbc.Card(id='results-card'), width=10)])
+    ],
 )
-
-
-# loading circle in the img-container whilst upload loaing
-#  button greyed out then green when successful image 
-@app.callback(
-    [Output('display-img', 'src'),
-    Output('img-store', 'src')],
-    [Input('upload', 'contents'),
-     Input('upload-btn', 'n_clicks')],
-     [State('img-store', 'src')])
-def upload_img(new_img, n_clicks, store):
-    # if new_img is None:  
-    if new_img is None:
-        if store is None:
-            return '', '' 
-        else:
-            return store, store
-    else:
-        return new_img, new_img
-
-@app.callback(
-    [Output('submit-btn', 'disabled'),
-    Output('submit-btn', 'className')],
-    [Input('display-img', 'src')])
-def set_submit_btn(src):
-    if src != '':
-        return False, 'btn submit-rdy'
-    return True,'btn disabled'
-    
 
 about_tab = html.Div(
     id='about-content',
@@ -75,104 +63,121 @@ about_tab = html.Div(
         html.H1('Skin Cancer App')
     ]
 )
-
 results_tab = html.Div(
     id='results-content',
     className='content',
-    style={'display':'none'},
-    children=[
-        html.Div(
-        children=[
-            html.Div([html.Img(id='analyzed-img', className='display-img')], className='img-container'),
-            html.Div([
-
-            ])
-        ]
-    )]
+    style={'display':'none'}
 )
 
-
-# Make results. might want to store them in a hidden div as well.
-@app.callback(
-    Output('analyzed-img', 'src'),
-    [Input('results-content', 'style')],
-    [State('img-store', 'src')])
-def results(results, src):
-    if src == '':
-        raise PreventUpdate
-
-    # Create image to show with results...
-    analyzed_img = src
-    return analyzed_img
-
-app.layout = html.Div([
-    html.Div([
-        html.Img(id='img-store', style={'display': 'none'}),
-        dcc.Tabs([
-            dcc.Tab(label='About', value='about-tab', className='tab'),
-            dcc.Tab(label='Start', value='start-tab', className='tab'),
-            dcc.Tab(label='Results', value='results-tab', className='tab')
-        ], id='tabs',
-            value='start-tab',
-            className='tab'),
-        html.Div(id='tabs-container',
-                 children=[
-                     html.Div([
-                         about_tab,
-                         start_tab,
-                         results_tab
-                     ])
-                 ]),
-
-    ], className='container')
-], className='page')
+card = dbc.Card(
+    [
+        dbc.CardHeader(
+            dbc.Tabs(
+                [
+                    dbc.Tab(label="About", tab_id="tab-about"
+                    ),
+                    dbc.Tab(label="Start", tab_id="tab-start"),
+                    dbc.Tab(label="Results", tab_id="tab-results"),
+                ],
+                id="card-tabs",
+                card=True,
+                active_tab="tab-start",
+                persistence=True, 
+                persistence_type="session"
+            )
+        ),
+        dbc.CardBody(html.P(
+            id="card-content", 
+            className="card-text",
+            children=[about_tab, start_tab, results_tab])),
+    ]
+)
 
 
 @app.callback(
     [Output('about-content', 'style'),
     Output('start-content', 'style'),
-    Output('results-content', 'style')],
-    [Input('tabs', 'value')])
-def render_content(tab):
-    if tab == 'about-tab':
+    Output('results-content', 'style')], 
+    [Input("card-tabs", "active_tab")]
+)
+def tab_content(active_tab):
+    if active_tab == 'tab-about':
         return {}, {'display': 'none'}, {'display': 'none'}
-    elif tab == 'start-tab':
+    elif active_tab == 'tab-start':
         return {'display': 'none'}, {}, {'display': 'none'}
-    elif tab == 'results-tab':
+    elif active_tab == 'tab-results':
         return {'display': 'none'}, {'display': 'none'}, {}
 
-
-# @app.callback(
-#     Output('tabs-container', 'children'),
-#     [Input('tabs', 'value')])
-# def render_content(tab):
-#     if tab == 'start-tab':
-#         return start_tab
-#     elif tab == 'about-tab':
-#         return about_tab
-# @app.callback(
-#     Output("output", "children"),
-#     [Input("upload-img", "value")],
-# )
-# def update_selection_mode(img):
-#     if img:
-#         return html.Div([
-#             html.Div(
-#                 id="img",
-#                 children=[
-#                     html.Img(
-#                         src='assets/example.jpg',
-#                         width='200px'
-#                     ),
-#                 ],
-#             ),
-#             html.P('Melanoma: 87%'),
-#             html.P('Mole: 10%'),
-#             html.P('Other: 3%'),
-#         ])
+@app.callback(
+    Output('display-img', 'src'),
+    [Input('upload', 'contents'),
+    Input('upload-btn', 'n_clicks')])
+def upload_img(new_img, n_clicks):
+    if new_img is None:  
+        raise PreventUpdate
+    return new_img
 
 
-server = app.server
+@app.callback(
+    Output('submit-btn', 'disabled'),
+    [Input('display-img', 'src')])
+def set_submit_btn(src):
+    if src != '':
+        return False
+    return True
+
+@app.callback(
+    Output('results-card', 'children'),
+    [Input('submit-btn', 'n_clicks'),
+    Input('display-img', 'src')]
+)
+def show_results(n_clicks, img):
+    if not n_clicks or not img:
+        raise PreventUpdate
+    # CNN call
+    risk = "High"
+    class_probs = [
+        (0.8375, 'Melanocytic Nevi (mole)'), 
+        (0.0962, 'Melanoma'),
+        (0.0663, 'Benign Keratosis')
+        ]
+    return [
+        dbc.CardHeader("Results"),
+        dbc.CardBody([
+            dbc.Row([
+                dbc.Col(f"{(class_probs[0][0]*100):.2f}%", width=3), 
+                dbc.Col(f"{class_probs[0][1]}", width=9), 
+                ],
+                justify="between"),
+            dbc.Row([
+                dbc.Col(f"{(class_probs[1][0]*100):.2f}%", width=3), 
+                dbc.Col(f"{class_probs[1][1]}", width=9), 
+                ],
+                justify="between"),
+            dbc.Row([
+                dbc.Col(f"{(class_probs[2][0]*100):.2f}%", width=3), 
+                dbc.Col(f"{class_probs[2][1]}", width=9), 
+                ],
+                justify="between"),
+            
+        ])
+        
+        # dbc.CardBody(
+        #     [
+
+        #         html.H4('Risk'),
+        #         dbc.Row([
+        #             html.P(risk),
+        #             html.P(f"{class_probs[0][1]}, {(class_probs[0][0]*100):.2f}%")
+        #         ])
+        #     ]
+        # ),
+    ]
+
+
+app.layout = dbc.Container(
+    card
+)
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=5001, debug=True)
